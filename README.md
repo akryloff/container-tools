@@ -1,74 +1,30 @@
-# Prerequisites:
-
-- Must be run as root on rpm-based Linux distro with either podman or docker installed
-
+Набор скриптов для создания базовых образов Docker
 ```
-help:
-    @echo
-    @echo "Usage: make <target>"
-    @echo
-    @echo " * 'shellcheck' - Execute the shellcheck linter"
-    @echo " * 'typos' - Check typos"
-    @echo " * 'fix-typos' - Fix typos"
-    @echo " * 'install-docker' - Install docker-ce"
-    @echo " * 'install-podman' - Install podman"
-    @echo
-    @echo " ** Oracle Linux targets ** "
-    @echo "OL-ALL, OL8, OL7, OL8-full, OL8-slim"
-    @echo "OL-ALL-AARCH, OL8-aarch64, OL7-aarch64, OL8-full-aarch64, OL8-slim-aarch64"
-```
+Использование: make <target>
 
-Build script by default will use Podman
-If Podman is not available it will use Docker instead
+ * 'print-%' - print-{ПЕРЕМЕННАЯ} - выводит значение переменной во время выполнения программы
 
-# Custom images
+ * 'prepare' - Установить все необходимые для работы конвейера зависимости
 
-oraclelinux/oracle_packages.mk - list of packages which will be installed in chroot/image
+ * 'shellcheck' - Выполнить проверку bash скриптов линтером
+ * 'typos' - Выполнить проверку на грамматические ошибки
+ * 'fix-typos' - Исправить грамматические ошибки
 
-# Using internal repositories
+ * 'install-docker' - Установить docker-ce
+ * 'install-podman' - Установить podman
+ * 'install-trivy' - Установить trivy - инструмент для сканирования образов docker на уязвимости
+ * 'enable-docker-experimental' - Включить экспериментальные функции docker-ce
+ * 'install-qemu-user-static' - Зарегистрировать в системе binfmt_misc, скачать и установить qemu-user-static
 
-Define $INTERNAL to use internal repositories - oraclelinux/repos/internal
+ ============================
+  ** Debian Linux targets **
+ ============================
 
-```
-INTERNAL=1 make OL8-slim
-```
-Set up proxy to build images from public repositories with VPN enabled 
-
-```
- alias proxyon="export http_proxy='http://${PROXY:PORT}';export https_proxy='${PROXY:PORT}'"; alias proxyoff="export http_proxy='';export https_proxy=''"
-
- proxyon
- proxyoff
-```
-
-# Debugging
-
-Set $TRACE to output both the raw value and function calls
-
-```
-TRACE=1 make OL8-slim
-```
-
-# Make targets & variables
-
-$ORACLE_COMPRESSION - Compression value, used by xz command, default value is "1"
-
-```
-ORACLE_COMPRESSION=1 make OL8-slim
-```
-
-make install-docker: - Warning! Will uninstall podman if it's present in the system
-make install-podman: - Warning! Will uninstall docker-ce if it's present in the system
-
-# Vagrant (optional)
-
-Vagrant config will use "bento/oracle-8" box
-Upon startup it will update VM and install dependencies
-
-```
-vagrant up
-vagrant ssh
-cd /opt/base_images
-sudo su
-make OL-ALL
+|debian11|
+|debian11-java|
+|debian11-java-slim|
+|debian11-graal|
+|debian11-graal-slim|
+|debian11-java-slim-maven|
+|debian11-java-slim-gradle|
 ```
